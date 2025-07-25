@@ -14,7 +14,7 @@ const LoginScreen = (props) => {
   const handleCustomLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("https://oot-pbi-embed-backend.azurewebsites.net/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,7 @@ const LoginScreen = (props) => {
                 variant="contained"
                 onClick={() => {
                   // Call your existing POST /api/usersInput here
-                  fetch("http://localhost:5000/api/auth/register", {
+                  fetch("https://oot-pbi-embed-backend.azurewebsites.net/api/auth/register", {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
