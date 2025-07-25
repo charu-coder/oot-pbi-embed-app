@@ -96,6 +96,7 @@ const LoginScreen = (props) => {
           <div className="signup-modal">
             <div className="signup-box">
               <h2>Create a New Account</h2>
+
               <input
                 type="email"
                 placeholder="Email"
@@ -108,10 +109,11 @@ const LoginScreen = (props) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+
               <Button
                 variant="contained"
+                fullWidth
                 onClick={() => {
-                  // Call your existing POST /api/usersInput here
                   fetch("https://oot-pbi-embed-backend.azurewebsites.net/api/auth/register", {
                     method: "POST",
                     headers: {
@@ -136,6 +138,7 @@ const LoginScreen = (props) => {
             </div>
           </div>
         )}
+
 
         {/* Optional Microsoft Sign-in Button (if needed later) */}
         {/* <Button
