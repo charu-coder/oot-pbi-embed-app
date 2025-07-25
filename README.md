@@ -1,1 +1,1 @@
-# oot-pbi-embed-app
+# pbi-oot-embed
