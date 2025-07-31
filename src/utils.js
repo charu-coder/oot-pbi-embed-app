@@ -91,7 +91,7 @@ export const login = () => {
     .then((response) => {
       console.log(JSON.stringify(response.data));
       sessionStorage.setItem("access_token", response.data.access_token)
-      generateEmbedToken();
+      // generateEmbedToken();
     })
     .catch((error) => {
       console.log(error);
@@ -100,58 +100,95 @@ export const login = () => {
 
 }
 
-export const generateEmbedToken = () => {
-  const axios = require('axios');
-  let data = JSON.stringify({
-    "datasets": [
-      {
-        "id": "d786cc57-751d-4719-96d6-56eb0eeadfe7"
-      },
-      {
-        "id": "87e94aa4-da3c-4b9f-99f0-a2def6ed1494"
-      },
-      {
-        "id": "1675982d-ec77-49b8-9e03-fa6f62a7156e"
-      }
-    ],
-    "reports": [
-      {
-        "allowEdit": true,
-        "id": "f1f84fe6-fbf9-4ed4-8a32-a7d986bcd0c6"
-      },
-      {
-        "allowEdit": true,
-        "id": "cfca6fc8-0cf3-4472-b72f-e92b4f8ae713"
-      },
-      {
-        "allowEdit": true,
-        "id": "9a3b9438-63a4-417c-a593-786e59c5f5da"
-      }
-    ]
-  });
+// export const generateEmbedToken = () => {
+//   const axios = require('axios');
+//   let data = JSON.stringify({
+//     "datasets": [
+//       {
+//         "id": "d786cc57-751d-4719-96d6-56eb0eeadfe7"
+//       },
+//       {
+//         "id": "87e94aa4-da3c-4b9f-99f0-a2def6ed1494"
+//       },
+//       {
+//         "id": "1675982d-ec77-49b8-9e03-fa6f62a7156e"
+//       }
+//     ],
+//     "reports": [
+//       {
+//         "allowEdit": true,
+//         "id": "f1f84fe6-fbf9-4ed4-8a32-a7d986bcd0c6"
+//       },
+//       {
+//         "allowEdit": true,
+//         "id": "cfca6fc8-0cf3-4472-b72f-e92b4f8ae713"
+//       },
+//       {
+//         "allowEdit": true,
+//         "id": "9a3b9438-63a4-417c-a593-786e59c5f5da"
+//       }
+//     ]
+//   });
 
-  let config = {
-    method: 'post',
-    maxBodyLength: Infinity,
-    url: 'https://api.powerbi.com/v1.0/myorg/GenerateToken',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${sessionStorage.getItem("access_token")}`
-    },
-    data: data
+//   let config = {
+//     method: 'post',
+//     maxBodyLength: Infinity,
+//     url: 'https://api.powerbi.com/v1.0/myorg/GenerateToken',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'Authorization': `Bearer ${sessionStorage.getItem("access_token")}`
+//     },
+//     data: data
+//   };
+
+//   axios.request(config)
+//     .then((response) => {
+//       console.log(JSON.stringify(response.data));
+//       sessionStorage.setItem("embed_token", response.data.token)
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+
+
+// }
+
+export const generateEmbedToken = async ({ reportId, workspaceId, datasetId, accessToken }) => {
+  const axios = require('axios');
+
+  if (!reportId || !workspaceId || !datasetId || !accessToken) {
+    console.error("Missing required parameters.");
+    return null;
+  }
+
+  const payload = {
+    datasets: [{ id: datasetId }],
+    reports: [{ id: reportId, allowEdit: false }],
+    targetWorkspaces: [{ id: workspaceId }],
+    accessLevel: "View"
   };
 
-  axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-      sessionStorage.setItem("embed_token", response.data.token)
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  const config = {
+    method: "post",
+    url: "https://api.powerbi.com/v1.0/myorg/GenerateToken",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json"
+    },
+    data: payload
+  };
 
+  try {
+    const response = await axios.request(config);
+    const embedToken = response.data.token;
+    console.log("✅ Embed token generated:", embedToken);
+    return embedToken;
+  } catch (error) {
+    console.error("❌ Failed to generate embed token:", error.response?.data || error.message);
+    return null;
+  }
+};
 
-}
 
 export const getAllReports = (workspaceId) => {
   // console.log("isTokenExpired", isTokenExpired)
