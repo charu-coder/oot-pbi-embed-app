@@ -75,7 +75,7 @@ const Home = () => {
       console.log("Token response:", data); // Should show the token
 
       // return data; // Return token object
-      setPowerBIToken(data.access_token);
+      setPowerBIToken(data.accessToken);
       console.log("before sending token bro", res)
       await fetchEmbedUrl({ reportId: "5dd47363-29f8-4984-90d4-2c7e7fc947c5", workspaceId: "d98dbbf9-63bf-4c37-ac97-584e3997a220", accessToken: data.access_token })
       const token = await generateEmbedToken({ reportId: "5dd47363-29f8-4984-90d4-2c7e7fc947c5", workspaceId: "d98dbbf9-63bf-4c37-ac97-584e3997a220", datasetId: "92d1baa2-a11a-4d28-baa6-c44b3d50a68d", accessToken: data.access_token });
