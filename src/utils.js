@@ -182,6 +182,7 @@ export const generateEmbedToken = async ({ reportId, workspaceId, datasetId, acc
     const response = await axios.request(config);
     const embedToken = response.data.token;
     console.log("✅ Embed token generated:", embedToken);
+    sessionStorage.setItem("embed_token", embedToken)
     return embedToken;
   } catch (error) {
     console.error("❌ Failed to generate embed token:", error.response?.data || error.message);
